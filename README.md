@@ -4,7 +4,11 @@
 
 
 ![infHost](https://github.com/birdm4nw/InfHost/blob/main/images/infhost-1.png)
-<img src="https://github.com/birdm4nw/InfHost/blob/main/images/infhost-1.png" alt="Description" width="300" />
+<img src="" alt="Description" width="300" />
+<div align="center">
+  <img src="https://github.com/birdm4nw/InfHost/blob/main/images/infhost-1.png" alt="Description of the image" width="700" />
+</div>
+
 
 
 ## Installation
