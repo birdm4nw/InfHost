@@ -4,3 +4,6 @@
 
 
 ![infHost](https://github.com/birdm4nw/InfHost/blob/main/images/infhost-1.png)
+
+## Installation
+1. Download binary 
