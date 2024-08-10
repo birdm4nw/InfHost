@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Colors
+BLACK='\033[0;30m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+line="-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+
+echo -e "\n$line"
+echo -ne "\t${GREEN}  Machine Information${NC}"
+echo -e "\n$line"
+
+# Functions
+getIPAddress() {
+    ipAddress=$(hostname -I | cut -d' ' -f1)
+}
+
+getHostname() {
+    hostname=$(hostname)
+}
+
+getUsername() {
+    username=$(whoami)
+}
+
+getOSInfo() {
+    osInfo=$(lsb_release -a 2>/dev/null | grep "Description" | awk '{print $2}' FS=':' | xargs)
+}
+
+getDomainInfo() {
+    domainName=$(realm list  2>/dev/null | grep "domain-name" | awk '{print $2}' FS=':' | tr -d ' ')
+
+    # Optional - software server information
+    serverInfo=$(realm list  2>/dev/null | grep "server-software" | awk '{print $2}' FS=':' | tr -d ' ')
+}
+
+getOtherInfo() {
+    uptime=$(uptime -p | awk '{print $2, $3}' FS=' ')
+    host=$(cat /sys/class/dmi/id/product_name)
+    # host=$(dmidecode system-manufacturer | grep "Product Name" | uniq | awk '{print $2}' FS=':' | xargs) - Requires root privileges
+}
+
+displayInfo() {
+
+    getIPAddress
+    getHostname
+    getUsername
+    getOSInfo
+    getDomainInfo
+    getOtherInfo
+
+    # Print formatted data
+    echo -e "${GREEN}[+]${NC}${YELLOW} Local_IP_Address ${BLUE}- ${NC} $ipAddress"
+    echo -e "${GREEN}[+]${NC}${YELLOW} Hostname ${BLUE}- ${NC} $hostname"
+    echo -e "${GREEN}[+]${NC}${YELLOW} Username ${BLUE}- ${NC} $username"
+    echo -e "${GREEN}[+]${NC}${YELLOW} OS ${BLUE}- ${NC} $osInfo"
+    if [ -z "$domainName" ]
+    then
+       echo -e "${RED}[!]${NC}${YELLOW} Domain_Name ${BLUE}- ${NC} NOT FOUND"
+    else
+        echo -e "${GREEN}[+]${NC}${YELLOW} Domain_Name ${BLUE}- ${NC} $domainName"
+    fi
+    if [ -z "$serverInfo" ]
+    then
+        echo -e "${RED}[!]${NC}${YELLOW} Domain_Software ${BLUE}- ${NC} NOT FOUND"
+    else
+        echo -e "${GREEN}[+]${NC}${YELLOW} Domain_Software ${BLUE}- ${NC} $serverInfo"
+    fi
+    echo -e "${GREEN}[+]${NC}${YELLOW} Uptime ${BLUE}- ${NC} $uptime"
+    echo -e "${GREEN}[+]${NC}${YELLOW} Host ${BLUE}- ${NC} $host"
+
+    echo -e "$line"; echo
+
+}
+
+main() {
+    displayInfo
+}
+
+main
